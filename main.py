@@ -35,6 +35,13 @@ def complete_task(tasks, number):
     return False
 
 
+def clear_completed(tasks):
+    """Remove all completed tasks in place. Return count removed."""
+    before = len(tasks)
+    tasks[:] = [t for t in tasks if not t["completed"]]
+    return before - len(tasks)
+
+
 def remove_task(tasks, number):
     """Remove a numbered task and return whether the task was found."""
     if 1 <= number <= len(tasks):
@@ -59,7 +66,7 @@ def load_tasks(filename="tasks.json"):
 def main():
     tasks = load_tasks()
     print(welcome_message())
-    print("Commands: add <task>, done <number>, remove <number>, list, quit")
+    print("Commands: add <task>, done <number>, remove <number>, list, clear, quit")
 
     while True:
         command = input("> ").strip()
@@ -86,8 +93,11 @@ def main():
                 print("Usage: remove <number>")
         elif action == "list":
             print(list_tasks(tasks))
+        elif action == "clear":
+            removed = clear_completed(tasks)
+            print(f"Removed {removed} completed task(s).")
         else:
-            print("Usage: add <task>, done <number>, remove <number>, list, quit")
+            print("Usage: add <task>, done <number>, remove <number>, list, clear, quit")
 
     save_tasks(tasks)
     print("\nYour tasks:")
